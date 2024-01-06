@@ -17,32 +17,39 @@ namespace ASP_API.Controller
         private readonly JwtService _jwtService;
         private readonly ISharedService _sharedService;
         private readonly IStudentService _studentService;
+        private readonly IWebHostEnvironment _environment;
+        private ResponseMessages response;
 
         public AdminController(
             Context context,
             EmailService emailService,
             JwtService jwtService,
             ISharedService sharedService,
-            IStudentService studentService
+            IStudentService studentService,
+            IWebHostEnvironment environment
             )
         {
             _context = context;
             _jwtService = jwtService;
             _sharedService = sharedService;
             _studentService = studentService;
+            _environment = environment ?? throw new ArgumentNullException( nameof( environment ) );
+            response = new();
         }
 
-        /// START STUDENT SECTION ///
-        [HttpPost("Register")]
-        public ActionResult<ResponseMessages> Register(StudentDetails studentDetails)
-        {
-            ResponseMessages response = new ResponseMessages();
+        /////////////////////////////////////////////// START STUDENT SECTION ///////////////////////////////////////////
+        
+        [HttpPost("StudentRegister")]
+        public async Task<ResponseMessages> Register([FromForm]StudentDetails studentDetails, IFormFile imageFile, IFormFile docFile)
+        {   
+            var response = new ResponseMessages();
             try
-            {
-                _studentService.Register(studentDetails);
-                response.StatusCode = HttpStatusCode.OK;
-                response.IsSuccess = true;
-                response.Result = "Your account has been sent for approval. Once it is approved you will get an email.";
+            {                      
+                    await _studentService.RegisterAsync(studentDetails, imageFile, docFile);
+                    response.StatusCode = HttpStatusCode.OK;
+                    response.IsSuccess = true;
+                    response.Result = "Your account has been sent for approval. Once it is approved you will get an email.";
+               
             } catch (Exception ex)
             {                
                 response.StatusCode = HttpStatusCode.BadRequest;
@@ -56,8 +63,6 @@ namespace ASP_API.Controller
         [HttpGet("StudentList")]
         public ActionResult<ResponseMessages> StudentList()
         {
-            ResponseMessages response = new ResponseMessages();
-
             try
             {
                 var result = _studentService.GetStudentDetails().ToList();
@@ -70,7 +75,7 @@ namespace ASP_API.Controller
             {
                 response.StatusCode=HttpStatusCode.NotFound;
                 response.IsSuccess = false;
-                response.Result = ex.Message;
+                response.ErrorMessages.Add(ex.Message);
                 return StatusCode((int)response.StatusCode, response);
             }
         }
@@ -78,7 +83,7 @@ namespace ASP_API.Controller
         [HttpGet("GetStudent/{id}")]
         public ActionResult<ResponseMessages> GetStudent(int id)
         {
-            ResponseMessages response = new ResponseMessages();
+           
             try
             {
                 var result = _studentService.GetStudent(id);
@@ -105,12 +110,12 @@ namespace ASP_API.Controller
         }                     
 
         [HttpPut("UpdateStudent")]
-        public ActionResult<ResponseMessages> UpdateStudent(StudentBasicDetailDTO studentBasicDetailDTO)
+        public ActionResult<ResponseMessages> UpdateStudent(StudentUpdateDTO studentDTO)
         {
-            ResponseMessages response = new ResponseMessages();
+            
             try
             {
-                var result = _studentService.UpdateStudent(studentBasicDetailDTO);
+                var result = _studentService.UpdateStudent(studentDTO);
                 if(result != null)
                 {
                     response.StatusCode = HttpStatusCode.OK;
@@ -134,7 +139,7 @@ namespace ASP_API.Controller
         [HttpDelete("RemoveStudent")]
         public ActionResult<ResponseMessages> RemoveStudent(int id)
         {   
-            ResponseMessages response = new ResponseMessages();
+            
             try
             {
                 var result = _context.Students.FirstOrDefault(x => x.Id == id);
@@ -161,16 +166,16 @@ namespace ASP_API.Controller
         }
 
         [HttpPut("UpdateProfile")]
-        public async Task<ActionResult<ResponseMessages>> UpdateProfile(IFormFile formFile, FileType fileType, int studentid)
+        public async Task<ActionResult<ResponseMessages>> UpdateProfile(IFormFile formFile, int studentid)
         {
-            ResponseMessages response = new ResponseMessages();
-            if (formFile == null || fileType == null)
+           
+            if (formFile == null)
             {
                 return BadRequest();
             }
             try
             {
-                await _studentService.UpdateStudentProfile(formFile, fileType, studentid);
+                await _studentService.UpdateStudentProfile(formFile, studentid);
                 response.StatusCode = HttpStatusCode.OK;
                 response.IsSuccess = true;
                 response.Result = "updated";
@@ -186,7 +191,6 @@ namespace ASP_API.Controller
         }
 
 
-        /// END STUDENT SECTION ///
-
+        //////////////////////////////////////////////// END STUDENT SECTION ////////////////////////////////////////////                   
     }
 }

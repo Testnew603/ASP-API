@@ -1,4 +1,5 @@
-﻿using ASP_API.Model.Student;
+﻿using ASP_API.Model.Public;
+using ASP_API.Model.Student;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,7 +18,7 @@ namespace ASP_API
             duration = int.Parse(configuration["Jwt:Duration"]!);
         }
 
-        public string GenerateToken(StudentDetails studentDetails, string type)
+        public string GenerateToken(StudentDetails studentDetails, string role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.key));
             var signingkey = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -30,7 +31,7 @@ namespace ASP_API
                 new Claim("dob", studentDetails.BirthDate.ToString()),
                 new Claim("email", studentDetails.Email),
                 new Claim("status", studentDetails.Status.ToString()), 
-                new Claim("type", type),
+                new Claim("role", role),
             };
 
             var jwtToken = new JwtSecurityToken(
@@ -42,6 +43,28 @@ namespace ASP_API
                 signingkey);
 
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
-        }        
+        }
+
+        public string GenerateTokenAdmin(AdminCredentials adminCredentials, string role)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.key));
+            var signingkey = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {                                               
+                new Claim("email", adminCredentials.Email),                
+                new Claim("role", role),
+            };
+
+            var jwtToken = new JwtSecurityToken(
+                issuer: "localhost",
+                audience: "localhost",
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.Now.AddMinutes(this.duration),
+                signingkey);
+
+            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        }
     }
 }

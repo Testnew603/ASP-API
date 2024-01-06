@@ -1,6 +1,5 @@
 ﻿using ASP_API.Model.Public;
 using ASP_API.Model.Student;
-using Microsoft.VisualBasic.FileIO;
 
 namespace ASP_API.DTO
 {
@@ -32,7 +31,7 @@ namespace ASP_API.DTO
 
 namespace ASP_API.DTO
 {
-    public class StudentBasicDetailDTO
+    public class StudentUpdateDTO
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;

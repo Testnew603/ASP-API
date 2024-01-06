@@ -7,9 +7,9 @@ namespace ASP_API.Services.Student
     {
         IList<StudentDetails> GetStudentDetails();
         StudentDetails GetStudent(int id);
-        void Register(StudentDetails studentDetails);
-        StudentBasicDetailDTO UpdateStudent(StudentBasicDetailDTO studentBasicDetailDTO);
+        Task RegisterAsync(StudentDetails studentDetails, IFormFile imageFile, IFormFile docFile);
+        StudentUpdateDTO UpdateStudent(StudentUpdateDTO studentDTO);
         void DeleteStudent(int id);
-        Task UpdateStudentProfile(IFormFile formFile, FileType fileType, int studentid);
+        Task UpdateStudentProfile(IFormFile formFile, int studentid);
     }
 }

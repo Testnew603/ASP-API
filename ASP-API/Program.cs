@@ -1,6 +1,9 @@
 using ASP_API;
+using ASP_API.Model.Public;
 using ASP_API.Services.Shared;
+using ASP_API.Services.Staff;
 using ASP_API.Services.Student;
+using ASP_API.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -44,10 +47,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ClockSkew = TimeSpan.Zero
     };
 });
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<ISharedService, SharedService>();
+
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IAdvisorService, AdvisorService>();
+builder.Services.AddScoped<IGeneralManagerService, GeneralManagerService>();
+builder.Services.AddScoped<IReviwerService, ReviwerService>();
+builder.Services.AddScoped<ITrainerService, TrainerService>();
+builder.Services.AddScoped<IHRManagerService, HRManagerService>();
+builder.Services.AddScoped<IBatchServices, BatchServices>();
+builder.Services.AddScoped<IBranchServices, BranchServices>();
+builder.Services.AddScoped<IDomainServices, DomainServices>();
+builder.Services.AddScoped<ICourseFeeServices, CourseFeeServices>();
+builder.Services.AddScoped<ICondonationFeeService, CondonationFeeService>();
+builder.Services.AddScoped<IStudentAgreementServices, StudentAgreementServices>();
+builder.Services.AddScoped<ResponseMessages>();
 
 var app = builder.Build();
 
@@ -57,6 +74,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware(typeof(GlobalErrorHandlingMiddleware));
 
 app.UseHttpsRedirection();
 

@@ -15,18 +15,14 @@ namespace ASP_API.Model.Student
         public string Qualification { get; set; } = string.Empty;
         public string Documents { get; set; } = string.Empty;
         public int DomainId { get; set; }
-        public string Password { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;    
         public string Profile { get; set; } = string.Empty;
         public Status Status { get; set; } = Status.PENDING;
-        //public UserType UserType { get; set; } = UserType.NONE;
         public Domain? Domain { get; set; }
-
     }
-
 
     public enum Status
     {
         PENDING, ACTIVE, BLOCKED, PLACED, TERMINATED
     }
-
 }

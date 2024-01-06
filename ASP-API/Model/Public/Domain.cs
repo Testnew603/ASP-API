@@ -5,6 +5,5 @@
         public int Id { get; set; }
         public string MainDomain { get; set; } = string.Empty;
         public string SubDomain { get; set; } = string.Empty;
-
     }
 }

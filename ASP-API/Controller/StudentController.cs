@@ -47,8 +47,8 @@ namespace ASP_API.Controller
                     return Ok("blocked");
                 }
 
-                var type = "STUDENT";
-                return Ok(_jwtService.GenerateToken(result, type));
+                var role = "STUDENT";
+                return Ok(_jwtService.GenerateToken(result, role));
 
             }
             return Ok("not found");
