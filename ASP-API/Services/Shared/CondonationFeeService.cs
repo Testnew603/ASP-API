@@ -56,7 +56,7 @@ namespace ASP_API.Services.Shared
                     FineType = condonationFees.FineType,
                     FineAmount = condonationFees.FineAmount,
                     Reason = condonationFees.Reason,                    
-                    CreatedAt = ($"{DateTime.Now:dd-MM-yyyy}"),
+                    CreatedAt = DateTime.Now.Date,
                 };
                 newCondonationFee.Status = FineStatus.NOTPAID;
 
@@ -78,7 +78,7 @@ namespace ASP_API.Services.Shared
 
                 _mapper.Map(condonationFees, result);
 
-                result.CreatedAt = ($"{DateTime.Now:dd-MM-yyyy}");
+                result.CreatedAt = DateTime.Now;
                 await _context.SaveChangesAsync();
                 return result;
             }
@@ -104,6 +104,49 @@ namespace ASP_API.Services.Shared
             catch (Exception ex)
             {
                 throw new Exception(ex.ToString());
+            }
+        }
+
+        //Penalty Actions while adding the fees
+
+        public async Task<CondonationFees> AddPenalty(CondonationFees condonationFees)
+        {
+            try
+            {
+                var newCondonationFee = new CondonationFees
+                {
+                    StudentId = condonationFees.StudentId,
+                    FineType = condonationFees.FineType,
+                    FineAmount = condonationFees.FineAmount,
+                    Reason = condonationFees.Reason,
+                    CreatedAt = condonationFees.CreatedAt,
+                };
+                newCondonationFee.Status = FineStatus.NOTPAID;
+
+                var result = _context.CondonationFees.Add(newCondonationFee);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new Exception("error occured");
+            }
+            return condonationFees;
+        }
+
+        public async Task<CondonationFees> UpdatePenalty(CondonationFees condonationFees)
+        {
+            try
+            {
+                var result = _context.CondonationFees.FirstOrDefault(x => x.Id == condonationFees.Id);
+
+                _mapper.Map(condonationFees, result);
+                
+                await _context.SaveChangesAsync();
+                return result;
+            }
+            catch
+            {
+                throw new Exception("invalid id");
             }
         }
     }

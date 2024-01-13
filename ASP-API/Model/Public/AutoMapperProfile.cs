@@ -12,6 +12,12 @@ namespace ASP_API.Model.Public
             CreateMap<GeneralManager, GeneralManagerDTO>().ReverseMap();
             CreateMap<CondonationFees, CondonationFees>();
             CreateMap<StudentAgreement, StudentAgreement>();
+            CreateMap<Fees, Fees>();
+            CreateMap<AllocStudentToAdvisor, AllocStudentToAdvisor>();
+            CreateMap<AllocStudentToAdvisor, AllocStudentToAdvisorDTO>();
+            CreateMap<Fees, FeeDTO>();
+            CreateMap<ReviewUpdates, ReviewUpdates>();
+            CreateMap<StudentAttendance, StudentAttendance>();
         }
     }
 }

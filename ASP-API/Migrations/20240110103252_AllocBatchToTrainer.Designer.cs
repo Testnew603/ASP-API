@@ -4,6 +4,7 @@ using ASP_API;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP_API.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240110103252_AllocBatchToTrainer")]
+    partial class AllocBatchToTrainer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -368,85 +370,6 @@ namespace ASP_API.Migrations
                     b.ToTable("Fees");
                 });
 
-            modelBuilder.Entity("ASP_API.Model.Public.ReviewSummary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Marks")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ReviewId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReviewId");
-
-                    b.ToTable("ReviewSummary");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.ReviewUpdates", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AdvisorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PostponeStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("PostponedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ReviewDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ReviewStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReviewerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeekNo")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvisorId");
-
-                    b.HasIndex("ReviewerId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("ReviewUpdates");
-                });
-
             modelBuilder.Entity("ASP_API.Model.Public.StudentAgreement", b =>
                 {
                     b.Property<int>("Id")
@@ -486,42 +409,6 @@ namespace ASP_API.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentAgreement");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.StudentAttendnace", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AdvisorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EntryTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExitTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvisorId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentAttendnace");
                 });
 
             modelBuilder.Entity("ASP_API.Model.Public.TrainingAndCommunication", b =>
@@ -1025,44 +912,6 @@ namespace ASP_API.Migrations
                     b.Navigation("StudentDetails");
                 });
 
-            modelBuilder.Entity("ASP_API.Model.Public.ReviewSummary", b =>
-                {
-                    b.HasOne("ASP_API.Model.Public.ReviewUpdates", "ReviewUpdates")
-                        .WithMany()
-                        .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ReviewUpdates");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.ReviewUpdates", b =>
-                {
-                    b.HasOne("ASP_API.Model.Staff.Advisor", "Advisor")
-                        .WithMany()
-                        .HasForeignKey("AdvisorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Staff.Reviewer", "Reviewer")
-                        .WithMany()
-                        .HasForeignKey("ReviewerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Student.StudentDetails", "StudentDetails")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Advisor");
-
-                    b.Navigation("Reviewer");
-
-                    b.Navigation("StudentDetails");
-                });
-
             modelBuilder.Entity("ASP_API.Model.Public.StudentAgreement", b =>
                 {
                     b.HasOne("ASP_API.Model.Public.CourseFee", "CourseFee")
@@ -1086,25 +935,6 @@ namespace ASP_API.Migrations
                     b.Navigation("CourseFee");
 
                     b.Navigation("Domain");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.StudentAttendnace", b =>
-                {
-                    b.HasOne("ASP_API.Model.Staff.Advisor", "Advisor")
-                        .WithMany()
-                        .HasForeignKey("AdvisorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Student.StudentDetails", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Advisor");
 
                     b.Navigation("Student");
                 });

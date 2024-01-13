@@ -27,6 +27,11 @@ namespace ASP_API
         public DbSet<AllocBatchToAdvisor> AllocBatchToAdvisors { get; set; }
         public DbSet<AllocBatchToAdvisor> BatchToAdvisors { get; set; }
         public DbSet<AllocBatchBranchToStudent> AllocBatchBranchToStudent { get; set; }
+        public DbSet<TrainingAndCommunication> TrainingAndCommunication { get; set; }
+        public DbSet<AllocBatchToTrainer> AllocBatchToTrainers { get; set; }
+        public DbSet<ReviewUpdates> ReviewUpdates { get; set; }  
+        public DbSet<ReviewSummary> ReviewSummary { get; set; }
+        public DbSet<StudentAttendance> StudentAttendance { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
@@ -36,10 +41,17 @@ namespace ASP_API
             configurationBuilder.Properties<FineType>().HaveConversion<string>();
             configurationBuilder.Properties<FineStatus>().HaveConversion<string>(); 
             configurationBuilder.Properties<AgreementStatus>().HaveConversion<string>();
-            configurationBuilder.Properties<FineStatus>().HaveConversion<string>();
+            configurationBuilder.Properties<FeeStatus>().HaveConversion<string>();
             configurationBuilder.Properties<StudentToAdvisorStatus>().HaveConversion<string>();
             configurationBuilder.Properties<BatchToAdvisorStatus>().HaveConversion<string>();
             configurationBuilder.Properties<BatchBranchToStudentStatus>().HaveConversion<string>();
+            configurationBuilder.Properties<TrainingStatus>().HaveConversion<string>();
+            configurationBuilder.Properties<TrainingBatchStatus>().HaveConversion<string>();
+            configurationBuilder.Properties<PostponeStatus>().HaveConversion<string>();
+            configurationBuilder.Properties<ReviewStatus>().HaveConversion<string>(); 
+            configurationBuilder.Properties<SummaryStatus>().HaveConversion<string>(); 
+            configurationBuilder.Properties<AttendnaceStatus>().HaveConversion<string>();
+            configurationBuilder.Properties<ReviewType>().HaveConversion<string>();
             configurationBuilder.Properties<SpecializedIn>().HaveConversion<string>(); 
         }
     }

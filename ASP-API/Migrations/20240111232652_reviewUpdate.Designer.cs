@@ -4,6 +4,7 @@ using ASP_API;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP_API.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240111232652_reviewUpdate")]
+    partial class reviewUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -486,42 +488,6 @@ namespace ASP_API.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentAgreement");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.StudentAttendnace", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AdvisorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EntryTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExitTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvisorId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentAttendnace");
                 });
 
             modelBuilder.Entity("ASP_API.Model.Public.TrainingAndCommunication", b =>
@@ -1086,25 +1052,6 @@ namespace ASP_API.Migrations
                     b.Navigation("CourseFee");
 
                     b.Navigation("Domain");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.StudentAttendnace", b =>
-                {
-                    b.HasOne("ASP_API.Model.Staff.Advisor", "Advisor")
-                        .WithMany()
-                        .HasForeignKey("AdvisorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Student.StudentDetails", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Advisor");
 
                     b.Navigation("Student");
                 });

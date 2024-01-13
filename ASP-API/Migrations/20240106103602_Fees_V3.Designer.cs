@@ -4,6 +4,7 @@ using ASP_API;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP_API.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240106103602_Fees_V3")]
+    partial class Fees_V3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,8 +78,8 @@ namespace ASP_API.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ModifiedAt")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -111,8 +113,8 @@ namespace ASP_API.Migrations
                     b.Property<int>("BatchId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedAt")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -125,39 +127,6 @@ namespace ASP_API.Migrations
                     b.HasIndex("BatchId");
 
                     b.ToTable("AllocBatchToAdvisor");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.AllocBatchToTrainer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("BatchRef")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TrainerId");
-
-                    b.ToTable("AllocBatchToTrainers");
                 });
 
             modelBuilder.Entity("ASP_API.Model.Public.AllocStudentToAdvisor", b =>
@@ -174,8 +143,8 @@ namespace ASP_API.Migrations
                     b.Property<int>("BatchId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedAt")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DomainId")
                         .HasColumnType("int");
@@ -246,8 +215,8 @@ namespace ASP_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedAt")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FineAmount")
                         .HasColumnType("int");
@@ -334,11 +303,11 @@ namespace ASP_API.Migrations
                     b.Property<double>("Balance")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedAt")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("LastDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Month")
                         .HasColumnType("nvarchar(max)");
@@ -355,9 +324,8 @@ namespace ASP_API.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -366,85 +334,6 @@ namespace ASP_API.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("Fees");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.ReviewSummary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Marks")
-                        .HasColumnType("float");
-
-                    b.Property<int>("ReviewId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReviewId");
-
-                    b.ToTable("ReviewSummary");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.ReviewUpdates", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AdvisorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PostponeStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("PostponedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ReviewDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ReviewStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReviewerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WeekNo")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvisorId");
-
-                    b.HasIndex("ReviewerId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("ReviewUpdates");
                 });
 
             modelBuilder.Entity("ASP_API.Model.Public.StudentAgreement", b =>
@@ -464,11 +353,11 @@ namespace ASP_API.Migrations
                     b.Property<int>("DomainId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("EndedAt")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("StartedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("StartedAt")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -486,81 +375,6 @@ namespace ASP_API.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentAgreement");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.StudentAttendnace", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AdvisorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EntryTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExitTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvisorId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentAttendnace");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.TrainingAndCommunication", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Activity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AttendedStrength")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BatchId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BatchStrength")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BatchId");
-
-                    b.HasIndex("TrainerId");
-
-                    b.ToTable("TrainingAndCommunication");
                 });
 
             modelBuilder.Entity("ASP_API.Model.Staff.Advisor", b =>
@@ -930,25 +744,6 @@ namespace ASP_API.Migrations
                     b.Navigation("Batch");
                 });
 
-            modelBuilder.Entity("ASP_API.Model.Public.AllocBatchToTrainer", b =>
-                {
-                    b.HasOne("ASP_API.Model.Student.StudentDetails", "StudentDetails")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Staff.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("StudentDetails");
-
-                    b.Navigation("Trainer");
-                });
-
             modelBuilder.Entity("ASP_API.Model.Public.AllocStudentToAdvisor", b =>
                 {
                     b.HasOne("ASP_API.Model.Staff.Advisor", "Advisor")
@@ -1025,44 +820,6 @@ namespace ASP_API.Migrations
                     b.Navigation("StudentDetails");
                 });
 
-            modelBuilder.Entity("ASP_API.Model.Public.ReviewSummary", b =>
-                {
-                    b.HasOne("ASP_API.Model.Public.ReviewUpdates", "ReviewUpdates")
-                        .WithMany()
-                        .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ReviewUpdates");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.ReviewUpdates", b =>
-                {
-                    b.HasOne("ASP_API.Model.Staff.Advisor", "Advisor")
-                        .WithMany()
-                        .HasForeignKey("AdvisorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Staff.Reviewer", "Reviewer")
-                        .WithMany()
-                        .HasForeignKey("ReviewerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Student.StudentDetails", "StudentDetails")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Advisor");
-
-                    b.Navigation("Reviewer");
-
-                    b.Navigation("StudentDetails");
-                });
-
             modelBuilder.Entity("ASP_API.Model.Public.StudentAgreement", b =>
                 {
                     b.HasOne("ASP_API.Model.Public.CourseFee", "CourseFee")
@@ -1088,44 +845,6 @@ namespace ASP_API.Migrations
                     b.Navigation("Domain");
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.StudentAttendnace", b =>
-                {
-                    b.HasOne("ASP_API.Model.Staff.Advisor", "Advisor")
-                        .WithMany()
-                        .HasForeignKey("AdvisorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Student.StudentDetails", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Advisor");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("ASP_API.Model.Public.TrainingAndCommunication", b =>
-                {
-                    b.HasOne("ASP_API.Model.Public.Batch", "Batch")
-                        .WithMany()
-                        .HasForeignKey("BatchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASP_API.Model.Staff.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Batch");
-
-                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("ASP_API.Model.Staff.Advisor", b =>

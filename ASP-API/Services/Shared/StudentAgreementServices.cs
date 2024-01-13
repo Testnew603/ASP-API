@@ -66,7 +66,7 @@ namespace ASP_API.Services.Shared
                     DomainId = studentDomain.DomainId,
                     CourseFeeID = studentAgreement.CourseFeeID,
                     StartedAt = studentAgreement.StartedAt,
-                    EndedAt = "nil",
+                    EndedAt = studentAgreement.StartedAt,
                     Documents = studentAgreement.Documents,
                 };
                 newStudAgreement.Status = AgreementStatus.NOTVERIFIED;

@@ -20,10 +20,10 @@ namespace ASP_API.Model.Public
         [JsonIgnore]
         public virtual Batch Batch { get; set; }
 
-        public string CreatedAt { get; set; } = DateTime.Now.ToString("dd:MM:yyyy");
-        public BatchToAdvisorStatus Status { get; set; } = BatchToAdvisorStatus.PENDING;
-
-
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]
+        [DataType(DataType.Date)]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public BatchToAdvisorStatus Status { get; set; } = BatchToAdvisorStatus.ACTIVE;
     }
         public enum BatchToAdvisorStatus
         {   

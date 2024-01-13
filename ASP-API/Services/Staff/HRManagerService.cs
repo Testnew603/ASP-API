@@ -84,7 +84,7 @@ namespace ASP_API.Services.Staff
         }
         public async Task<HRManagerDTO> UpdateHRManager(HRManagerDTO hrManagerDTO)
         {
-            var response = new ResponseMessages();
+            
             try
             {
                 var hrManagerExist = _context.HRManager.FirstOrDefault(x => x.Id == hrManagerDTO.Id);

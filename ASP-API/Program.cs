@@ -64,6 +64,12 @@ builder.Services.AddScoped<IDomainServices, DomainServices>();
 builder.Services.AddScoped<ICourseFeeServices, CourseFeeServices>();
 builder.Services.AddScoped<ICondonationFeeService, CondonationFeeService>();
 builder.Services.AddScoped<IStudentAgreementServices, StudentAgreementServices>();
+builder.Services.AddScoped<IFeeService, FeeService>();
+builder.Services.AddScoped<IAllocStudToAdvisorService, AllocStudToAdvisorService>();
+builder.Services.AddScoped<ITrainingAndCommunicationService, TrainingAndCommunicationService>();
+builder.Services.AddScoped<IReviewUpdateService, ReviewUpdateService>();
+builder.Services.AddScoped<IStudentAttendanceService, StudentAttendanceService>();
+
 builder.Services.AddScoped<ResponseMessages>();
 
 var app = builder.Build();
