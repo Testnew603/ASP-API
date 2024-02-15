@@ -31,12 +31,12 @@ namespace ASP_API
         public DbSet<AllocBatchToTrainer> AllocBatchToTrainers { get; set; }
         public DbSet<ReviewUpdates> ReviewUpdates { get; set; }  
         public DbSet<ReviewSummary> ReviewSummary { get; set; }
-        public DbSet<StudentAttendance> StudentAttendance { get; set; }
+        public DbSet<StudentAttendance> StudentAttendanceReport { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             configurationBuilder.Properties<Status>().HaveConversion<string>();   
-            configurationBuilder.Properties<AdvisorStatus>().HaveConversion<string>();
+            configurationBuilder.Properties<StaffStatus>().HaveConversion<string>();
             configurationBuilder.Properties<Type>().HaveConversion<string>();
             configurationBuilder.Properties<FineType>().HaveConversion<string>();
             configurationBuilder.Properties<FineStatus>().HaveConversion<string>(); 
@@ -50,7 +50,7 @@ namespace ASP_API
             configurationBuilder.Properties<PostponeStatus>().HaveConversion<string>();
             configurationBuilder.Properties<ReviewStatus>().HaveConversion<string>(); 
             configurationBuilder.Properties<SummaryStatus>().HaveConversion<string>(); 
-            configurationBuilder.Properties<AttendnaceStatus>().HaveConversion<string>();
+            configurationBuilder.Properties<AttendanceStatus>().HaveConversion<string>();
             configurationBuilder.Properties<ReviewType>().HaveConversion<string>();
             configurationBuilder.Properties<SpecializedIn>().HaveConversion<string>(); 
         }

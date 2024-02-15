@@ -1,11 +1,7 @@
 ﻿using ASP_API.Model.Public;
 using ASP_API.Model.Staff;
 using ASP_API.Model.Student;
-using ASP_API.Utility;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.Linq.Dynamic.Core.Tokenizer;
 using System.Net;
 
 namespace ASP_API.Controller
@@ -25,7 +21,88 @@ namespace ASP_API.Controller
             _logger = logger;
         }
 
-        [HttpGet("AdminLogin")]      
+        //[HttpGet("AllLoginUser")]
+        //public ActionResult<ResponseMessages> AllLoginUser(string email, string password)
+        //{
+        //    var response = new ResponseMessages();            
+
+        //    var student = _context.Students
+        //        .Select(x => new AllUser { Email = x.Email, Password = x.Password, Status = x.Status.ToString(), Role = "STUDENT" })
+        //        .Where(x => x.Email == email && x.Password == password);
+        //    var advisor = _context.Advisors
+        //        .Select(x => new AllUser { Email = x.Email, Password = x.Password, Status = x.Status.ToString(), Role = "ADVISOR" })
+        //        .Where(x => x.Email == email && x.Password == password);
+        //    var hrmanager = _context.HRManager
+        //        .Select(x => new AllUser { Email = x.Email, Password = x.Password, Status = x.Status.ToString(), Role = "HRMANAGER" })
+        //        .Where(x => x.Email == email && x.Password == password);
+        //    var trainer = _context.Trainer
+        //        .Select(x => new AllUser { Email = x.Email, Password = x.Password, Status = x.Status.ToString(), Role = "TRAINER" })
+        //        .Where(x => x.Email == email && x.Password == password);
+        //    var reviewer = _context.Reviewer
+        //        .Select(x => new AllUser { Email = x.Email, Password = x.Password, Status = x.Status.ToString(), Role = "REVIEWER" })
+        //        .Where(x => x.Email == email && x.Password == password);
+        //    List<AllUser> admin = new List<AllUser>();
+        //    admin.Add(new AllUser { Email = "admin", Password = "123", Status = "ACTIVE", Role = "ADMIN" });
+
+            
+        //    var alldata = student.ToList().Union(advisor.ToList())
+        //        .Union(hrmanager.ToList()).Union(trainer.ToList()).Union(reviewer.ToList()).Union(admin);
+
+        //    string tokens = null;
+        //    var token = tokens;
+
+        //    try
+        //    {
+        //        if (alldata != null)
+        //        {
+        //            var newresult = alldata.Single(x => x.Email.Equals(email) && x.Password.Equals(password));
+        //            if (newresult.Status == "PENDING")
+        //            { return Ok("unapproved"); }
+
+        //            if (newresult.Status == "BLOCKED")
+        //            { return Ok("blocked"); }
+
+        //            if(newresult.Role == "STUDENT")
+        //            {
+        //                var result = _context.Students.Single(u => u.Email.Equals(email) && u.Password.Equals(password));
+        //                token = _jwtService.GenerateToken(result, newresult.Role);
+        //            } else if(newresult.Role == "ADVISOR")
+        //            {
+        //                var result = _context.Advisors.Single(u => u.Email.Equals(email) && u.Password.Equals(password));
+        //                token = _jwtService.GenerateToken(result, newresult.Role);
+        //            } else if(newresult.Role == "HRMANAGER")
+        //            {
+        //                var result = _context.HRManager.Single(u => u.Email.Equals(email) && u.Password.Equals(password));
+        //                token = _jwtService.GenerateToken(result, newresult.Role);
+        //            } else if(newresult.Role == "TRAINER")
+        //            {
+        //                var result = _context.Trainer.Single(u => u.Email.Equals(email) && u.Password.Equals(password));
+        //                token = _jwtService.GenerateToken(result, newresult.Role);
+        //            } else if(newresult.Role == "REVIEWER")
+        //            {
+        //                var result = _context.Reviewer.Single(u => u.Email.Equals(email) && u.Password.Equals(password));
+        //                token = _jwtService.GenerateToken(result, newresult.Role);
+        //            } else
+        //            {
+        //                //token = _jwtService.GenerateTokenAdmin(newresult);
+        //            }
+                    
+        //            response.IsSuccess = true;
+        //            response.StatusCode = HttpStatusCode.Accepted;
+        //            response.Result = token;
+        //        }
+        //        else { throw new Exception(); }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.IsSuccess = false;
+        //        response.StatusCode = HttpStatusCode.BadRequest;
+        //        response.Result = "Invalid email or password" + ex;
+        //    }
+        //    return response;
+        //}
+
+        [HttpGet("AdminLogin")]
         public ActionResult<ResponseMessages> AdminLogin(string email, string password)
         {
             var response = new ResponseMessages();
@@ -33,25 +110,28 @@ namespace ASP_API.Controller
             {
                 Email = "admin",
                 Password = "123",
+                Role = "ADMIN",
+                Status = "ACTIVE",
             };
             try
             {
-            if(email == adminCredentials.Email && password == adminCredentials.Password)
-            {
-                var role = "ADMIN";
-                var token = _jwtService.GenerateTokenAdmin(adminCredentials, role);
+                if (email == adminCredentials.Email && password == adminCredentials.Password)
+                {                    
+                    var token = _jwtService.GenerateTokenAdmin(adminCredentials);
                     response.IsSuccess = true;
                     response.StatusCode = HttpStatusCode.Accepted;
-                    response.Result = token;                    
-            }  else { throw new Exception(); }        
+                    response.Result = token;
+                }
+                else { throw new Exception(); }
 
-            } catch (Exception ex)
-            {
-                response.IsSuccess= false;
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Result = "Invalid email or password" + ex;                
             }
-                return response;            
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.Result = "Invalid email or password" + ex;
+            }
+            return response;
         }
 
         [HttpGet("StudentLogin")]
@@ -74,8 +154,10 @@ namespace ASP_API.Controller
                     response.IsSuccess = true;
                     response.StatusCode = HttpStatusCode.Accepted;
                     response.Result = token;
-                } else { throw new Exception(); }
-            } catch (Exception ex)
+                }
+                else { throw new Exception(); }
+            }
+            catch (Exception ex)
             {
                 response.IsSuccess = false;
                 response.StatusCode = HttpStatusCode.BadRequest;
@@ -95,10 +177,10 @@ namespace ASP_API.Controller
                     var result = _context.GeneralManager.Single(student =>
                     student.Email.Equals(email) && student.Password.Equals(password));
 
-                    if (result.Status == Status.PENDING)
+                    if (result.Status == StaffStatus.PENDING)
                     { return Ok("unapproved"); }
 
-                    if (result.Status == Status.BLOCKED)
+                    if (result.Status == StaffStatus.BLOCKED)
                     { return Ok("blocked"); }
 
                     var role = "GENERALMANAGER";
@@ -129,10 +211,10 @@ namespace ASP_API.Controller
                     var result = _context.HRManager.Single(student =>
                     student.Email.Equals(email) && student.Password.Equals(password));
 
-                    if (result.Status == Status.PENDING)
+                    if (result.Status == StaffStatus.PENDING)
                     { return Ok("unapproved"); }
 
-                    if (result.Status == Status.BLOCKED)
+                    if (result.Status == StaffStatus.BLOCKED)
                     { return Ok("blocked"); }
 
                     var role = "HRMANAGER";
@@ -163,10 +245,10 @@ namespace ASP_API.Controller
                     var result = _context.Advisors.Single(student =>
                     student.Email.Equals(email) && student.Password.Equals(password));
 
-                    if (result.Status == AdvisorStatus.PENDING)
+                    if (result.Status == StaffStatus.PENDING)
                     { return Ok("unapproved"); }
 
-                    if (result.Status == AdvisorStatus.BLOCKED)
+                    if (result.Status == StaffStatus.BLOCKED)
                     { return Ok("blocked"); }
 
                     var role = "ADVISOR";
@@ -197,10 +279,10 @@ namespace ASP_API.Controller
                     var result = _context.Reviewer.Single(student =>
                     student.Email.Equals(email) && student.Password.Equals(password));
 
-                    if (result.Status == Status.PENDING)
+                    if (result.Status == StaffStatus.PENDING)
                     { return Ok("unapproved"); }
 
-                    if (result.Status == Status.BLOCKED)
+                    if (result.Status == StaffStatus.BLOCKED)
                     { return Ok("blocked"); }
 
                     var role = "REVIEWER";
@@ -231,10 +313,10 @@ namespace ASP_API.Controller
                     var result = _context.Trainer.Single(student =>
                     student.Email.Equals(email) && student.Password.Equals(password));
 
-                    if (result.Status == Status.PENDING)
+                    if (result.Status == StaffStatus.PENDING)
                     { return Ok("unapproved"); }
 
-                    if (result.Status == Status.BLOCKED)
+                    if (result.Status == StaffStatus.BLOCKED)
                     { return Ok("blocked"); }
 
                     var role = "TRAINER";

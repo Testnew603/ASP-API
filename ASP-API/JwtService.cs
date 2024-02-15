@@ -48,15 +48,16 @@ namespace ASP_API
         }
 
         // admin token generation
-        public string GenerateTokenAdmin(AdminCredentials adminCredentials, string role)
+        public string GenerateTokenAdmin(AdminCredentials credentials)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.key));
             var signingkey = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {                                               
-                new Claim("email", adminCredentials.Email),                
-                new Claim("role", role),
+                new Claim("email", credentials.Email),                
+                new Claim("role", credentials.Role),
+                new Claim("status", credentials.Status),
             };
 
             var jwtToken = new JwtSecurityToken(

@@ -14,7 +14,7 @@ namespace ASP_API.Model.Staff
         public string Password { get; set; } = string.Empty;
         public string Profile { get; set; } = string.Empty;
         public int DomainId { get; set; }
-        public Status Status { get; set; } = Status.PENDING;
+        public StaffStatus Status { get; set; } = StaffStatus.PENDING;
         public Domain Domain { get; set; }
     }
 }

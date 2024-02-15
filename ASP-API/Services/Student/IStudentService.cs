@@ -10,6 +10,7 @@ namespace ASP_API.Services.Student
         Task RegisterAsync(StudentDetails studentDetails, IFormFile imageFile, IFormFile docFile);
         StudentUpdateDTO UpdateStudent(StudentUpdateDTO studentDTO);
         void DeleteStudent(int id);
-        Task UpdateStudentProfile(IFormFile formFile, int studentid);
+        Task UpdateStudentProfile(int studentid, IFormFile formFile);
+        Task<StudentStatusUpdateDTO> UpdateStudentStatus(StudentStatusUpdateDTO statusUpdateDTO);
     }
 }

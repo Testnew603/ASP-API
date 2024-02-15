@@ -1,4 +1,5 @@
-﻿using ASP_API.Model.Public;
+﻿using ASP_API.DTO;
+using ASP_API.Model.Public;
 
 namespace ASP_API.Services.Shared
 {
@@ -6,8 +7,10 @@ namespace ASP_API.Services.Shared
     {
         public Task<IEnumerable<StudentAttendance>> GetStudentAttendanceList();
         public Task<StudentAttendance> GetStudentAttendance(int id);
-        public Task<StudentAttendance> AddStudentAttendance(StudentAttendance studentAttendance);
+        public Task<StudAttendanceEntryDTO> AddStudentAttendanceEntry(StudAttendanceEntryDTO attendanceEntryDTO);
+        public Task<StudAttendanceExitDTO> AddStudentAttendanceExit(StudAttendanceExitDTO attendanceExitDTO);
         public Task<StudentAttendance> UpdateStudentAttendance(StudentAttendance studentAttendance);
         public Task<bool> DeleteStudentAttendance(int? id);
+        public Task<string> GetLocalIpAddress();
     }
 }

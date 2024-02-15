@@ -1,9 +1,9 @@
 ﻿using Abp.Domain.Services;
 using ASP_API.Model.Public;
 using ASP_API.Services.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Net.NetworkInformation;
 
 namespace ASP_API.Controller
 {
@@ -17,15 +17,19 @@ namespace ASP_API.Controller
         public DomainController(IDomainServices domainServices, ResponseMessages response)
         {
             _domainServices = domainServices;
-            _response = response;
+            _response = response;         
         }
 
-        [HttpGet("domainlist")]
+        [HttpGet("DomainList")]
         public async Task<IActionResult> DomainList()
         {
             try
             {
                 var domainList = await _domainServices.GetDomainList();
+
+                //var ipAddress = HttpContext.Connection.RemoteIpAddress;
+                //Console.WriteLine(ipAddress);
+                //var ipadd = _domainServices.GetLocalIpAddress();
 
                 if (domainList == null || !domainList.Any())
                 {
@@ -48,7 +52,7 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpGet("getdomainbyid")]
+        [HttpGet("GetDomainById")]
         public async Task<IActionResult> GetDomainById(int Id)
         {
             try

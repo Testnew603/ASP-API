@@ -5,7 +5,9 @@ using ASP_API.Services.Staff;
 using ASP_API.Services.Student;
 using ASP_API.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -71,6 +73,12 @@ builder.Services.AddScoped<IReviewUpdateService, ReviewUpdateService>();
 builder.Services.AddScoped<IStudentAttendanceService, StudentAttendanceService>();
 
 builder.Services.AddScoped<ResponseMessages>();
+builder.Services.Configure<FormOptions>(o =>
+{
+    o.ValueLengthLimit = int.MaxValue;
+    o.MultipartBodyLengthLimit = int.MaxValue;
+    o.MemoryBufferThreshold = int.MaxValue;
+});
 
 var app = builder.Build();
 
@@ -88,6 +96,30 @@ app.UseHttpsRedirection();
 app.UseCors("myCorsPolicy");
 
 app.UseAuthorization();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "images")),
+    RequestPath = new PathString("/images")
+});
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Profiles/advisor")),
+    RequestPath = new PathString("/Profiles/advisor")
+});
+
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Documents")),
+    RequestPath = new PathString("/Documents")
+});
+
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Profiles")),
+    RequestPath = new PathString("/Profiles")
+});
 
 app.MapControllers();
 

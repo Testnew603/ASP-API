@@ -27,7 +27,7 @@ namespace ASP_API.Services.Staff
         public async Task<Advisor> AddAdvisor(Advisor advisor, IFormFile imageFile, IFormFile docFile)
         {
             try
-            {            
+            {                     
             var newAdvisor = new Advisor
             {
                 FirstName = advisor.FirstName,
@@ -40,7 +40,7 @@ namespace ASP_API.Services.Staff
                 Password = advisor.Password,
                 DomainId = advisor.DomainId,
             };
-                newAdvisor.Status = AdvisorStatus.PENDING;
+                newAdvisor.Status = StaffStatus.PENDING;
 
             string filename = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
             var path = Path.Combine(Directory.GetCurrentDirectory(), "Profiles/advisor/");
@@ -113,6 +113,30 @@ namespace ASP_API.Services.Staff
                 throw;
             }                        
         }
+
+        public async Task<AdvisorStatusUpdateDTO> UpdateAdvisorStatus(AdvisorStatusUpdateDTO statusUpdateDTO)
+        {
+            var response = new ResponseMessages();
+            try
+            {
+                var advisorExist = _context.Advisors.FirstOrDefault(x => x.Id == statusUpdateDTO.Id);
+                if (advisorExist == null) { throw new Exception(); }
+
+                advisorExist.Status = statusUpdateDTO.Status;
+                _mapper.Map(statusUpdateDTO, advisorExist);
+                var result = _context.Advisors.Update(advisorExist);
+                await _context.SaveChangesAsync();
+
+                return statusUpdateDTO;
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.ToString());
+                throw;
+            }
+
+        }
+
         public async Task<bool> DeleteAdvisor(int? id)
         {
             try

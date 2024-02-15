@@ -8,6 +8,6 @@ namespace ASP_API.Services.Shared
         public Task<Domain> GetDomainById(int? id);
         public Task<Domain> AddDomain(Domain domain);
         public Task<Domain> UpdateDomain(Domain domain);
-        public Task<bool> DeleteDomain(int? id);
+        public Task<bool> DeleteDomain(int? id);        
     }
 }

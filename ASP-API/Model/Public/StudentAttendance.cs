@@ -29,14 +29,17 @@ namespace ASP_API.Model.Public
         [DataType(DataType.DateTime)]
         public DateTime ExitTime { get; set; }
 
+        public string LateReason { get; set; } = string.Empty;
+        public string LeavingReason { get; set; } = string.Empty;
+
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         [DataType(DataType.Date)]
         public DateTime CreatedAt { get; set; }
 
-        public AttendnaceStatus Status { get; set; }
+        public AttendanceStatus Status { get; set; }
     }
-    public enum AttendnaceStatus
+    public enum AttendanceStatus
     {
-        LATE, PRESENT, ABSENT
+        PENDING, PRESENT, ABSENT
     }
 }

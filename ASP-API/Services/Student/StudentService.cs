@@ -1,5 +1,7 @@
 ﻿using ASP_API.DTO;
+using ASP_API.Model.Public;
 using ASP_API.Model.Student;
+using System.Reflection;
 
 namespace ASP_API.Services.Student
 {
@@ -34,6 +36,7 @@ namespace ASP_API.Services.Student
                 student.Status = Status.PENDING;
 
                 string filename = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+               
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "images/");
                 if (!Directory.Exists(path))
                 {
@@ -128,7 +131,7 @@ namespace ASP_API.Services.Student
             return studentDTO;
         }
 
-        public async Task UpdateStudentProfile(IFormFile profileImage, int studentid)
+        public async Task UpdateStudentProfile(int studentid, IFormFile profileImage)
         {
            try
             {
@@ -137,6 +140,7 @@ namespace ASP_API.Services.Student
 
                 using (var stream = new FileStream(Path.Combine(path, filename), FileMode.Create))
                 {
+                    //var Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face");
                     await profileImage.CopyToAsync(stream);
                 }
 
@@ -151,8 +155,37 @@ namespace ASP_API.Services.Student
                 await _context.SaveChangesAsync();
             } catch (Exception ex)
             {
-                throw new Exception("file error");
+                throw new Exception("file error" + ex);
             }
         }
+
+        public async Task<StudentStatusUpdateDTO> UpdateStudentStatus(StudentStatusUpdateDTO statusUpdateDTO)
+        {            
+            try
+            {
+                var studentExist = _context.Students.FirstOrDefault(x => x.Id == statusUpdateDTO.Id);
+                if (studentExist == null) { throw new Exception("ID not exist"); }
+
+                studentExist.Status = statusUpdateDTO.Status;                
+                var result = _context.Students.Update(studentExist);
+                await _context.SaveChangesAsync();
+
+                return statusUpdateDTO;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.ToString());
+                throw;
+            }
+        }
+
+
+
+
+
+
+
+
+
     }
 }

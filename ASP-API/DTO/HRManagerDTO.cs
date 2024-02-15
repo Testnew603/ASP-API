@@ -1,4 +1,5 @@
-﻿using ASP_API.Model.Student;
+﻿using ASP_API.Model.Staff;
+using ASP_API.Model.Student;
 
 namespace ASP_API.DTO
 {
@@ -12,7 +13,7 @@ namespace ASP_API.DTO
         public string Email { get; set; } = string.Empty;
         public string Mobile { get; set; } = string.Empty;
         public string Qualification { get; set; } = string.Empty;          
-        public Status Status { get; set; }
+        public StaffStatus Status { get; set; }
     }
 }
 

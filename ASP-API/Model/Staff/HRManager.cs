@@ -15,6 +15,6 @@ namespace ASP_API.Model.Staff
         public string Password { get; set; } = string.Empty;
         public string Profile { get; set; } = string.Empty;
         public string Documents { get; set; } = string.Empty;
-        public Status Status { get; set; } = Status.PENDING;
+        public StaffStatus Status { get; set; } = StaffStatus.PENDING;
     }
 }

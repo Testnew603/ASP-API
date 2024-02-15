@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using System.Net.NetworkInformation;
 
 namespace ASP_API.Services.Shared
 {
@@ -56,7 +57,7 @@ namespace ASP_API.Services.Shared
                 throw new Exception("error occured");
             }
             return domain;
-        }      
+        }
         public async Task<Domain> UpdateDomain(Domain domain)
         {
             try
@@ -91,6 +92,7 @@ namespace ASP_API.Services.Shared
             {
                 throw new Exception(ex.ToString());
             }
-        }
-    }    
+        }    
+    }
+
 }

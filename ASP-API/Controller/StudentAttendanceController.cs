@@ -1,4 +1,5 @@
-﻿using ASP_API.Model.Public;
+﻿using ASP_API.DTO;
+using ASP_API.Model.Public;
 using ASP_API.Services.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace ASP_API.Controller
             _response = response;
         }
 
-        [HttpGet("attendanceList")]
+        [HttpGet("GetStudentAttendanceList")]
         public async Task<IActionResult> GetStudentAttendanceList()
         {
             try
@@ -48,7 +49,7 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpGet("getAttendanceById")]
+        [HttpGet("GetStudentAttendanceById")]
         public async Task<IActionResult> GetStudentAttendance(int Id)
         {
             try
@@ -64,7 +65,6 @@ namespace ASP_API.Controller
                 _response.StatusCode = HttpStatusCode.OK;
 
                 return Ok(_response.Result);
-
             }
             catch (Exception ex)
             {
@@ -76,12 +76,35 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpPost("addAttendance")]
-        public async Task<IActionResult> AddStudentAttendance(StudentAttendance studentAttendance)
+        [HttpPost("AddStudentAttendanceEntry")]
+        public async Task<IActionResult> AddStudentAttendanceEntry(StudAttendanceEntryDTO attendanceEntryDTO)
         {
             try
             {
-                var result = await _studentAttendanceService.AddStudentAttendance(studentAttendance);
+                var result = await _studentAttendanceService.AddStudentAttendanceEntry(attendanceEntryDTO);
+
+                _response.IsSuccess = true;
+                _response.Result = result;
+                _response.StatusCode = HttpStatusCode.OK;
+
+                return Ok(_response.Result);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.Unauthorized;
+                _response.ErrorMessages.Add(ex.Message);
+
+                return StatusCode((int)HttpStatusCode.Unauthorized, _response.ErrorMessages);
+            }
+        }
+
+        [HttpPut("AddStudentAttendanceExit")]
+        public async Task<IActionResult> AddStudentAttendanceExit(StudAttendanceExitDTO attendanceExitDTO)
+        {
+            try
+            {
+                var result = await _studentAttendanceService.AddStudentAttendanceExit(attendanceExitDTO);
 
                 _response.IsSuccess = true;
                 _response.Result = result;
@@ -100,7 +123,7 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpPut("updateAttendance")]
+        [HttpPut("UpdateStudentAttendance")]
         public async Task<IActionResult> UpdateStudentAttendance(StudentAttendance studentAttendance)
         {
             try
@@ -124,7 +147,7 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpDelete("deleteStudentAttendance")]
+        [HttpDelete("DeleteStudentAttendance")]
         public async Task<IActionResult> DeleteStudentAttendance(int id)
         {
             try

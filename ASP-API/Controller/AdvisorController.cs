@@ -4,9 +4,12 @@ using ASP_API.Model.Staff;
 using ASP_API.Services.Shared;
 using ASP_API.Services.Staff;
 using ASP_API.Services.Student;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Reflection;
 
 namespace ASP_API.Controller
 {
@@ -23,7 +26,7 @@ namespace ASP_API.Controller
             _response = response;
         }
 
-        [HttpGet("advisorlist")]
+        [HttpGet("AdvisorList")]
         public async Task<IActionResult> AdvisorList()
         {
             try
@@ -51,12 +54,19 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpGet("getadvisorbyid")]
+        [HttpGet("GetAdvisorById")]
         public async Task<IActionResult> GetAdvisorById(int Id)
         {
             try
             {
                 var advisor = await _advisorService.GetAdvisorById(Id);
+
+                var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                var imagesPath = "/Profiles/advisor";
+                var imageUrl = baseUrl + imagesPath + "/" + advisor.Profile;
+                
+                advisor.Profile = imageUrl;      
+
                 if (advisor == null)
                 {
                     return StatusCode((int)HttpStatusCode.NoContent);
@@ -78,19 +88,20 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpPost("addadvisor")]
+        [HttpPost("AddAdvisor")]
         public async Task<IActionResult> AddAdvisor([FromForm] Advisor advisor, IFormFile imageFile, IFormFile docFile)
         {
             try
             {
+
                 var result = await _advisorService.AddAdvisor(advisor, imageFile, docFile);
 
                 _response.IsSuccess = true;
-                _response.Result = result;
-                _response.StatusCode = HttpStatusCode.OK; 
-                
+                _response.Result = "Your account has been sent for approval. Once it is approved you will get an email.";
+                _response.StatusCode = HttpStatusCode.OK;
+
                 return Ok(_response.Result);
-                
+
             } catch (Exception ex)
             {
                 _response.IsSuccess = false;
@@ -101,7 +112,7 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpPut("updateadvisor")]
+        [HttpPut("UpdateAdvisor")]
         public async Task<IActionResult> UpdateAdvisor(AdvisorDTO advisorDTO)
         {
             try
@@ -125,7 +136,31 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpPut("updateadvisorprofile")]
+        [HttpPut("UpdateAdvisorStatus")]
+        public async Task<IActionResult> UpdateAdvisorStatus(AdvisorStatusUpdateDTO statusUpdateDTO)
+        {
+            try
+            {
+                var result = await _advisorService.UpdateAdvisorStatus(statusUpdateDTO);
+
+                _response.IsSuccess = true;
+                _response.Result = result;
+                _response.StatusCode = HttpStatusCode.OK;
+
+                return Ok(_response.Result);
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.Unauthorized;
+                _response.ErrorMessages.Add(ex.Message);
+
+                return StatusCode((int)HttpStatusCode.Unauthorized, _response.ErrorMessages);
+            }
+        }
+
+        [HttpPut("UpdateAdvisorProfile")]
         public async Task<IActionResult> UpdateAdvisorProfile([FromForm] AdvisorProfileDTO profileDTO)
         {
             try
@@ -148,7 +183,7 @@ namespace ASP_API.Controller
                 return StatusCode((int)HttpStatusCode.Unauthorized, _response.ErrorMessages);
             }
         }
-        [HttpPut("updateadvisordocument")]
+        [HttpPut("UpdateAdvisorDocument")]
         public async Task<IActionResult> UpdateAdvisorDocument([FromForm] AdvisorDocumentDTO documentDTO)
         {
             try
@@ -168,7 +203,7 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpDelete("deleteadvisor")]
+        [HttpDelete("DeleteAdvisor")]
         public async Task<IActionResult> DeleteAdvisor(int id)
         {
             try
@@ -187,6 +222,42 @@ namespace ASP_API.Controller
 
                 return Ok(_response.Result);
             }
-        }      
+        }
+
+
+
+
+
+        [HttpPost("Upload"), DisableRequestSizeLimit]
+        public async Task<IActionResult> Upload()
+        {
+            try
+            {
+                var formCollection = await Request.ReadFormAsync();
+                var files = Request.Form.Files;
+                var file = formCollection.Files.First();
+                var folderName = Path.Combine("Profiles", "advisor");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    return Ok("All the files are successfully uploaded.");
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
     }
 }

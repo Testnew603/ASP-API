@@ -40,7 +40,7 @@ namespace ASP_API.Services.Staff
                     Qualification = manager.Qualification,
                     Password = manager.Password,
                 };
-                    newGeneralManager.Status = Status.PENDING;
+                    newGeneralManager.Status = StaffStatus.PENDING;
                 string filename = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "Profiles/manager/");
                 if (!Directory.Exists(path))

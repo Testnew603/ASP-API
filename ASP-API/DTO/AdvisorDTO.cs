@@ -1,4 +1,5 @@
 ﻿using ASP_API.Model.Staff;
+using ASP_API.Model.Student;
 
 namespace ASP_API.DTO
 {
@@ -13,7 +14,7 @@ namespace ASP_API.DTO
         public string Mobile { get; set; } = string.Empty;
         public string Qualification { get; set; } = string.Empty;
         public int DomainId { get; set; }
-        public AdvisorStatus Status { get; set; }        
+        public StaffStatus Status { get; set; }        
     }
 }
 
@@ -32,7 +33,17 @@ namespace ASP_API.DTO
     {
         public int Id { get; set; }
         public IFormFile Document { get; set; }
+    }    
+}
+
+namespace ASP_API.DTO
+{
+    public class AdvisorStatusUpdateDTO
+    {
+        public int Id { get; set; }
+        public StaffStatus Status { get; set; }
     }
+    //public record AdvisorStatusUpdateDTO(int Id, StaffStatus AdvisorStatus);
 }
 
 

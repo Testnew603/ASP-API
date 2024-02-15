@@ -44,7 +44,7 @@ namespace ASP_API.Services.Staff
                     Password = reviewer.Password,
                     DomainId = reviewer.DomainId,
                 };
-                newReviewer.Status = Status.PENDING;
+                newReviewer.Status = StaffStatus.PENDING;
 
                 string filename = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "Profiles/reviewer/");

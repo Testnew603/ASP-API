@@ -1,4 +1,5 @@
 ﻿using ASP_API.Model.Public;
+using ASP_API.Model.Staff;
 using ASP_API.Model.Student;
 
 namespace ASP_API.DTO
@@ -13,7 +14,7 @@ namespace ASP_API.DTO
         public string Mobile { get; set; } = string.Empty;    
         public int DomainId { get; set; }
         public Domain? Domain { get; set; }
-        public Status Status { get; set; } = Status.PENDING;
+        public StaffStatus Status { get; set; } = StaffStatus.PENDING;
     }
 }
 

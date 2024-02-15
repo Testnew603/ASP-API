@@ -3,9 +3,9 @@ using ASP_API.Model.Public;
 using ASP_API.Model.Student;
 using ASP_API.Services.Shared;
 using ASP_API.Services.Student;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Reflection;
 
 namespace ASP_API.Controller
 {
@@ -80,13 +80,22 @@ namespace ASP_API.Controller
             }
         }
 
-        [HttpGet("GetStudent/{id}")]
+        [HttpGet("GetStudent")]
         public ActionResult<ResponseMessages> GetStudent(int id)
-        {
-           
+        {           
             try
             {
                 var result = _studentService.GetStudent(id);
+
+                string imagepath = Path.Combine(Path.GetDirectoryName
+                (Assembly.GetExecutingAssembly().Location), result.Profile);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "images");
+
+                var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                var imagesPath = "/images";
+                var imageUrl = baseUrl + imagesPath + "/" + result.Profile;
+                result.Profile = imageUrl;
+         
                 if (result != null)
                 {
                     response.StatusCode = HttpStatusCode.OK;
@@ -107,7 +116,9 @@ namespace ASP_API.Controller
             }
 
             return Ok(response);
-        }                     
+        }        
+        
+
 
         [HttpPut("UpdateStudent")]
         public ActionResult<ResponseMessages> UpdateStudent(StudentUpdateDTO studentDTO)
@@ -166,16 +177,15 @@ namespace ASP_API.Controller
         }
 
         [HttpPut("UpdateProfile")]
-        public async Task<ActionResult<ResponseMessages>> UpdateProfile(IFormFile formFile, int studentid)
-        {
-           
+        public async Task<ActionResult<ResponseMessages>> UpdateProfile(int studentid, IFormFile formFile)
+        {          
             if (formFile == null)
             {
                 return BadRequest();
             }
             try
             {
-                await _studentService.UpdateStudentProfile(formFile, studentid);
+                await _studentService.UpdateStudentProfile(studentid, formFile);
                 response.StatusCode = HttpStatusCode.OK;
                 response.IsSuccess = true;
                 response.Result = "updated";
@@ -187,6 +197,55 @@ namespace ASP_API.Controller
                 response.IsSuccess = false;
                 response.Result = ex.Message;
                 throw;
+            }
+        }
+
+        [HttpGet("StudentProfilePath")]
+        public ActionResult<ResponseMessages> StudentProfilePath()
+        {
+            try
+            {
+                string imagepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "images");
+                var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+                var imagesPath = "/images";
+                var imageUrl = baseUrl + imagesPath + "/";
+
+                response.StatusCode = HttpStatusCode.OK;
+                response.IsSuccess = true;
+                response.Result = imageUrl;
+                return response;
+
+            } catch(Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
+                response.IsSuccess = false;
+                response.Result = ex.Message;
+                throw;
+            }
+        }
+
+        [HttpPut("UpdateStudentStatus")]
+        public async Task<ActionResult<ResponseMessages>> UpdateStudentStatus(StudentStatusUpdateDTO statusUpdateDTO)
+        {
+            try
+            {
+                var result = await _studentService.UpdateStudentStatus(statusUpdateDTO);
+
+                response.IsSuccess = true;
+                response.Result = result;
+                response.StatusCode = HttpStatusCode.OK;
+
+                return Ok(response.Result);
+
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.StatusCode = HttpStatusCode.Unauthorized;
+                response.ErrorMessages.Add(ex.Message);
+
+                return StatusCode((int)HttpStatusCode.Unauthorized, response.ErrorMessages);
             }
         }
 

@@ -13,5 +13,6 @@ namespace ASP_API.Services.Staff
         public Task <bool> DeleteAdvisor(int? id);        
         public Task<AdvisorProfileDTO> UpdateAdvisorProfile(AdvisorProfileDTO profileDTO);
         public Task<AdvisorDocumentDTO> UpdateAdvisorDocument(AdvisorDocumentDTO documentDTO);
+        public Task<AdvisorStatusUpdateDTO> UpdateAdvisorStatus(AdvisorStatusUpdateDTO statusUpdateDTO);
     }
 }

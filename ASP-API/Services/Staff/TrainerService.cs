@@ -28,7 +28,7 @@ namespace ASP_API.Services.Staff
                     Password = trainer.Password, 
                     SpecializedIn = trainer.SpecializedIn,
                 };
-                newTrainer.Status = Status.PENDING;
+                newTrainer.Status = StaffStatus.PENDING;
 
                 string filename = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "Profiles/trainer/");
